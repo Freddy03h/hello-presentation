@@ -52,7 +52,7 @@
         color: #FFFFFF;
         font-weight: 300;
         letter-spacing: 0.025em;
-        padding: 8px 8px 10px;
+        padding: 8px 18px 10px;
         font-size: 30px;
       }
       .reveal .controls div.navigate-left,
@@ -151,7 +151,9 @@ If you decide to implement this grant then you must be aware that the access tok
 hello.init({
   facebook : FACEBOOK_CLIENT_ID,
   google   : GOOGLE_CLIENT_ID
-},{redirect_uri:'redirect.html'});
+},{
+  redirect_uri : '/redirect'
+})
           </code></pre>
         </section>
 
@@ -160,7 +162,56 @@ hello.init({
           <pre><code data-trim contenteditable class="javascript">
 buttonEl.addEventListener('click', function(e) {
   hello('facebook').login()
-});
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>login options</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello('facebook').login({
+  // default is 'popup'
+  display: 'page',
+
+  // default is null
+  scope: 'email,publish,photos',
+
+  // default is init value or window.location.href
+  redirect_uri: '/redirect-facebook',
+
+  // for explicit grant, default is 'token' for implicit grant 
+  response_type: 'code',
+  
+  // default is true for initiate auth flow, despite current valid token
+  force: false
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>on auth.login</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello.on('auth.login', function(auth){
+
+  // call user information, for the given network
+  hello( auth.network ).api( '/me' ).then( function(r){
+
+    labelEl.innerHTML = '<img src="'+ r.thumbnail +'" /> Hey ' + r.name
+
+  })
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>getAuthResponse</h2>
+          <blockquote>Get the current status of the session. This is a synchronous request and does not validate any session cookies which may have expired.</blockquote>
+          <pre><code data-trim contenteditable class="javascript">
+var fbSession = hello( "facebook" ).getAuthResponse()
+
+var fbAccessToken = fbSession.access_token
+
+var fbExpires = fbSession.expires
           </code></pre>
         </section>
 
