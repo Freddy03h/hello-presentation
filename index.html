@@ -94,7 +94,7 @@
       <div class="slides">
         <section>
           <h1><a href="http://adodson.com/hello.js/">hello.js</a></h1>
-          <h4>A client-side Javascript SDK for authenticating with OAuth</h4>
+          <h4>A client-side Javascript SDK<br/>for authenticating with OAuth</h4>
           <hr>
           <p>
             <small>SDK by <a href="http://adodson.com/">Andrew Dodson</a> / <a href="https://twitter.com/setData">@setData</a></small>
@@ -107,7 +107,61 @@
         <!-- |||| -->
 
         <section>
-          <h1>oauth</h1>
+          <h1>oauth<span class="fragment"> 2</span></h1>
+        </section>
+
+        <section>
+          <h2>implicit grant</h2>
+          <p>Special flow for clients that can't keep secrets.</p>
+          <aside class="notes">
+Authorisation code grant
+
+The authorisation code grant is the grant that most people think of when OAuth is described.
+
+If you’ve ever signed into a website or application with your Twitter/Facebook/Google/(insert major Internet company here) account then you’ll have experienced using this grant.
+
+Essentially a user will click on a “sign in with Facebook” (or other IdP) and then be redirected from the application/website (the “client”) to the IdP authorisation server. The user will then sign in to the IdP with their credentials, and then - if they haven’t already - authorise the client to allow it to use the user’s data (such as their name, email address, etc). If they authorise the request the user will be redirected back to the client with a token (called the authorisation code) in the query string (e.g. http://client.com/redirect?code=XYZ123) which the client will capture and exchange for an access token in the background.
+
+This grant is suitable where the resource owner is a user and they are using a client which is allows a user to interact with a website in a browser. An obvious example is the client being another website, but desktop applications such as Spotify or Reeder use embedded browsers.
+
+Some mobile applications use this flow and again use an embedded browser (or redirect the user to the native browser and then are redirected back to the app using a custom protocol).
+
+In this grant the access token is kept private from the resource owner.
+
+If you have a mobile application that is for your own service (such as the official Spotify or Facebook apps on iOS) it isn’t appropriate to use this grant as the app itself should already be trusted by your authorisation server and so the _resource owner credentials grant would be more appropriate.
+
+
+Implicit grant
+
+The implicit grant is similar to the authentication code grant described above. The user will be redirected in a browser to the IdP authorisation server, sign in, authorise the request but instead of being returned to the client with an authentication code they are redirected with an access token straight away.
+
+The purpose of the implicit grant is for use by clients which are not capable of keeping the client’s own credentials secret; for example a JavaScript only application.
+
+If you decide to implement this grant then you must be aware that the access token should be treated as “public knowledge” (like a public RSA key) and therefore it must have a very limited permissions when interacting with the API server. For example an access token that was granted using the authentication code grant could have permission to be used to delete resources owned by the user, however an access token granted through the implicit flow should only be able to “read” resources and never perform any destructive operations.
+            </aside>
+        </section>
+
+        <section>
+          <h1>hello.js</h1>
+        </section>
+
+        <section>
+          <h2>init</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello.init({
+  facebook : FACEBOOK_CLIENT_ID,
+  google   : GOOGLE_CLIENT_ID
+},{redirect_uri:'redirect.html'});
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>login</h2>
+          <pre><code data-trim contenteditable class="javascript">
+buttonEl.addEventListener('click', function(e) {
+  hello('facebook').login()
+});
+          </code></pre>
         </section>
 
 
