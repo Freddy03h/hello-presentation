@@ -32,6 +32,10 @@
       .reveal a:not(.image) {
         color: #EA5C45;
       }
+      .reveal a:not(.image):hover {
+        color: #EA5C45;
+        opacity: 0.7;
+      }
       .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
         color: #39414C;
         font-family: 'Open Sans', Arial, Helvetica, sans-serif;
@@ -60,11 +64,17 @@
       }
       .reveal .controls div.navigate-left,
       .reveal .controls div.navigate-left.enabled {
-        border-right-color: #EA5C45;
+        border-right-color: #EA5C45 !important;
       }
       .reveal .controls div.navigate-right,
       .reveal .controls div.navigate-right.enabled {
-        border-left-color: #EA5C45;
+        border-left-color: #EA5C45 !important;
+      }
+      .reveal .controls div.navigate-left:hover,
+      .reveal .controls div.navigate-left.enabled:hover,
+      .reveal .controls div.navigate-right:hover,
+      .reveal .controls div.navigate-right.enabled:hover {
+        opacity: 0.4;
       }
     </style>
 
@@ -137,6 +147,11 @@ SC.connect(function(){
         </section>
 
         <section>
+          <h2>no sdk…</h2>
+          <img src="img/instagram.png" alt="Instagram developer libraries">
+        </section>
+
+        <section>
           <h2>hand made</h2>
           <pre><code data-trim contenteditable class="javascript">
 buttonEl.addEventListener('click', function(e) {
@@ -165,11 +180,6 @@ req.open('GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible', t
 req.setRequestHeader('Authorization', 'Bearer ' + google_auth.access_token)
 req.send(null)
           </code></pre>
-        </section>
-
-        <section>
-          <h2>no sdk…</h2>
-          <img src="img/instagram.png" alt="Instagram developer libraries">
         </section>
 
         <!-- |||| -->
@@ -223,9 +233,9 @@ If you decide to implement this grant then you must be aware that the access tok
         <section>
           <h2>modular</h2>
           <pre><code data-trim contenteditable class="html">
-<script src="src/hello.js"></script>
+&lt;script src="src/hello.js"&gt;&lt;/script&gt;
 
-<script src="src/modules/google.js"></script>
+&lt;script src="src/modules/google.js"&gt;&lt;/script&gt;
           </code></pre>
           <div>
           <ul>
@@ -298,7 +308,7 @@ hello.on('auth.login', function(auth){
   // call user information, for the given network
   hello( auth.network ).api( '/me' ).then( function(r){
 
-    labelEl.innerHTML = '<img src="'+ r.thumbnail +'" /> Hey ' + r.name
+    labelEl.innerHTML = '&lt;img src="'+ r.thumbnail +'" /&gt; Hey ' + r.name
 
   })
 })
