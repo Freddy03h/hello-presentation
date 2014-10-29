@@ -2,6 +2,7 @@
 
 A client-side Javascript SDK for authenticating with OAuth
 
+[See the presentation](http://freddy03h.github.io/hello-presentation)
 
 ## Installation
 
