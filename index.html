@@ -26,6 +26,9 @@
         background: #F4F4F4;
         background-color: #F4F4F4;
       }
+      .reveal ul {
+        list-style: circle;
+      }
       .reveal a:not(.image) {
         color: #EA5C45;
       }
@@ -93,21 +96,91 @@
       <!-- Any section element inside of this container is displayed as a slide -->
       <div class="slides">
         <section>
-          <h1><a href="http://adodson.com/hello.js/">hello.js</a></h1>
+          <h1><a href="http://adodson.com/hello.js/" target="_blank">hello.js</a></h1>
           <h4>A client-side Javascript SDK<br/>for authenticating with OAuth</h4>
           <hr>
           <p>
-            <small>SDK by <a href="http://adodson.com/">Andrew Dodson</a> / <a href="https://twitter.com/setData">@setData</a></small>
+            Project by <a href="http://adodson.com/" target="_blank">Andrew Dodson</a> / <a href="https://twitter.com/setData" target="_blank">@setData</a>
           </p>
           <p>
-            <small>Presentation by <a href="http://freddy03h.github.io">Freddy Harris</a> / <a href="http://twitter.com/harrisfreddy">@harrisfreddy</a></small>
+            <small>Presentation by <a href="http://freddy03h.github.io" target="_blank">Freddy Harris</a> / <a href="http://twitter.com/harrisfreddy" target="_blank">@harrisfreddy</a></small>
           </p>
         </section>
 
         <!-- |||| -->
 
         <section>
-          <h1>oauth<span class="fragment"> 2</span></h1>
+          <h2>provider sdk</h2>
+          <p>Facebook</p>
+          <pre><code data-trim contenteditable class="javascript">
+FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+    console.log('Logged in.');
+  }
+  else {
+    FB.login();
+  }
+});
+          </code></pre>
+          <p>Soundcloud</p>
+          <pre><code data-trim contenteditable class="javascript">
+SC.connect(function(){
+  SC.put("/me/followings/3207", function(user, error){
+    if(error){
+      alert("Error: " + error.message);
+    }else{
+      alert("You are now following " + user.username);
+    }
+  });
+});
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>hand made</h2>
+          <pre><code data-trim contenteditable class="javascript">
+buttonEl.addEventListener('click', function(e) {
+  var urlGoogleAuth = 'https://accounts.google.com/o/oauth2/auth?client_id=xxxxxxxxxxxxxxxxx.apps.googleusercontent.com&redirect_uri=http://localhost:8081/heart/oauthcallback&response_type=code token id_token gsession&scope=https://www.googleapis.com/auth/plus.login&state=hello'
+  window.location = urlGoogleAuth
+})
+          </code></pre>
+          <pre><code data-trim contenteditable class="javascript">
+var oauthcallback = function(){
+  if(location.hash){
+    var params = {},
+        queryString = location.hash.substring(1),
+        regex = /([^&=]+)=([^&]*)/g,
+        m
+    while (m = regex.exec(queryString)) {
+      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2])
+    }
+
+    google_auth = params
+  }
+}
+          </code></pre>
+          <pre><code data-trim contenteditable class="javascript">
+var req = new XMLHttpRequest()
+req.open('GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible', true)
+req.setRequestHeader('Authorization', 'Bearer ' + google_auth.access_token)
+req.send(null)
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>no sdk…</h2>
+          <img src="img/instagram.png" alt="Instagram developer libraries">
+        </section>
+
+        <!-- |||| -->
+
+        <section>
+          <h1>oauth 2</h1>
+        </section>
+
+        <section>
+          <h2>explicit grant</h2>
+          <p>Flow for a website. The access token is kept private on the backend.</p>
         </section>
 
         <section>
@@ -141,8 +214,37 @@ If you decide to implement this grant then you must be aware that the access tok
             </aside>
         </section>
 
+        <!-- |||| -->
+
         <section>
           <h1>hello.js</h1>
+        </section>
+
+        <section>
+          <h2>modular</h2>
+          <pre><code data-trim contenteditable class="html">
+<script src="src/hello.js"></script>
+
+<script src="src/modules/google.js"></script>
+          </code></pre>
+          <div>
+          <ul>
+            <li>dropbox.js</li>
+            <li>facebook.js</li>
+            <li>flickr.js</li>
+            <li>foursquare.js</li>
+            <li>github.js</li>
+            <li>google.js</li>
+          </ul>
+          <ul>
+            <li>instagram.js</li>
+            <li>linkedin.js</li>
+            <li>soundcloud.js</li>
+            <li>twitter.js</li>
+            <li>window.js</li>
+            <li>yahoo.js</li>
+          </ul>
+          </div>
         </section>
 
         <section>
@@ -205,14 +307,40 @@ hello.on('auth.login', function(auth){
 
         <section>
           <h2>getAuthResponse</h2>
-          <blockquote>Get the current status of the session. This is a synchronous request and does not validate any session cookies which may have expired.</blockquote>
+          <p>Get the current status of the session.</p>
+          <p><small>This is a synchronous request and does not validate any session cookies which may have expired.</small></p>
           <pre><code data-trim contenteditable class="javascript">
-var fbSession = hello( "facebook" ).getAuthResponse()
+var fbSession = hello('facebook').getAuthResponse()
 
 var fbAccessToken = fbSession.access_token
 
 var fbExpires = fbSession.expires
           </code></pre>
+        </section>
+
+        <section>
+          <h2>api</h2>
+          <p>Make calls to the API for getting and posting data.</p>
+          <pre><code data-trim contenteditable class="javascript">
+hello('facebook').api('me').then(function(json){
+
+  alert('Your name is '+ json.name)
+
+}, function(e){
+
+  alert('Whoops! ' + e.error.message )
+
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>oauth proxy</h2>
+          <img src="img/oauth-proxy.png" alt="OAuth Proxy">
+        </section>
+
+        <section>
+          <h3><a href="http://adodson.com/hello.js/" target="_blank">adodson.com/hello.js</a></h3>
         </section>
 
 
