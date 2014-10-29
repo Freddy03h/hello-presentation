@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+
+    <title>A presentation of hello.js</title>
+
+    <meta name="description" content="A presentation of hello.js">
+    <meta name="author" content="Freddy Harris">
+
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <link rel="stylesheet" href="css/reveal.min.css">
+    <link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+
+    <!-- For syntax highlighting -->
+    <link rel="stylesheet" href="lib/css/zenburn.css">
+
+    <style>
+      @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700&subset=latin,latin-ext);
+      body {
+        background: #F4F4F4;
+        background-color: #F4F4F4;
+      }
+      .reveal ul {
+        list-style: circle;
+      }
+      .reveal a:not(.image) {
+        color: #EA5C45;
+      }
+      .reveal a:not(.image):hover {
+        color: #EA5C45;
+        opacity: 0.7;
+      }
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+        color: #39414C;
+        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+        letter-spacing: 0em;
+      }
+      .reveal {
+        color: #858585;
+        font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+      }
+      .reveal p {
+        font-weight: 300;
+      }
+      .reveal .progress span{
+        background: #EA5C45;
+      }
+      .reveal blockquote {
+        background-clip: padding-box;
+        box-shadow: inset 0 -4px 0 #EA5C45;
+        background-color: #39414C;
+        border-radius: 5px;
+        color: #FFFFFF;
+        font-weight: 300;
+        letter-spacing: 0.025em;
+        padding: 8px 18px 10px;
+        font-size: 30px;
+      }
+      .reveal .controls div.navigate-left,
+      .reveal .controls div.navigate-left.enabled {
+        border-right-color: #EA5C45 !important;
+      }
+      .reveal .controls div.navigate-right,
+      .reveal .controls div.navigate-right.enabled {
+        border-left-color: #EA5C45 !important;
+      }
+      .reveal .controls div.navigate-left:hover,
+      .reveal .controls div.navigate-left.enabled:hover,
+      .reveal .controls div.navigate-right:hover,
+      .reveal .controls div.navigate-right.enabled:hover {
+        opacity: 0.4;
+      }
+    </style>
+
+    <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+    <script>
+      if( window.location.search.match( /print-pdf/gi ) ) {
+        var link = document.createElement( 'link' );
+        link.rel = 'stylesheet';
+        link.type = 'text/css';
+        link.href = 'css/print/pdf.css';
+        document.getElementsByTagName( 'head' )[0].appendChild( link );
+      }
+    </script>
+      
+    <style type="text/css">
+      .reveal ul {
+        margin-bottom: 16px;
+      }
+    </style>
+    <!--[if lt IE 9]>
+    <script src="lib/js/html5shiv.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <div class="reveal">
+
+      <!-- Any section element inside of this container is displayed as a slide -->
+      <div class="slides">
+        <section>
+          <h1><a href="http://adodson.com/hello.js/" target="_blank">hello.js</a></h1>
+          <h4>A client-side Javascript SDK<br/>for authenticating with OAuth</h4>
+          <hr>
+          <p>
+            Project by <a href="http://adodson.com/" target="_blank">Andrew Dodson</a> / <a href="https://twitter.com/setData" target="_blank">@setData</a>
+          </p>
+          <p>
+            <small>Presentation by <a href="http://freddy03h.github.io" target="_blank">Freddy Harris</a> / <a href="http://twitter.com/harrisfreddy" target="_blank">@harrisfreddy</a></small>
+          </p>
+        </section>
+
+        <!-- |||| -->
+
+        <section>
+          <h2>provider sdk</h2>
+          <p>Facebook</p>
+          <pre><code data-trim contenteditable class="javascript">
+FB.getLoginStatus(function(response) {
+  if (response.status === 'connected') {
+    console.log('Logged in.');
+  }
+  else {
+    FB.login();
+  }
+});
+          </code></pre>
+          <p>Soundcloud</p>
+          <pre><code data-trim contenteditable class="javascript">
+SC.connect(function(){
+  SC.put("/me/followings/3207", function(user, error){
+    if(error){
+      alert("Error: " + error.message);
+    }else{
+      alert("You are now following " + user.username);
+    }
+  });
+});
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>no sdk…</h2>
+          <img src="img/instagram.png" alt="Instagram developer libraries">
+        </section>
+
+        <section>
+          <h2>hand made</h2>
+          <pre><code data-trim contenteditable class="javascript">
+buttonEl.addEventListener('click', function(e) {
+  var urlGoogleAuth = 'https://accounts.google.com/o/oauth2/auth?client_id=xxxxxxxxxxxxxxxxx.apps.googleusercontent.com&redirect_uri=http://localhost:8081/heart/oauthcallback&response_type=code token id_token gsession&scope=https://www.googleapis.com/auth/plus.login&state=hello'
+  window.location = urlGoogleAuth
+})
+          </code></pre>
+          <pre><code data-trim contenteditable class="javascript">
+var oauthcallback = function(){
+  if(location.hash){
+    var params = {},
+        queryString = location.hash.substring(1),
+        regex = /([^&=]+)=([^&]*)/g,
+        m
+    while (m = regex.exec(queryString)) {
+      params[decodeURIComponent(m[1])] = decodeURIComponent(m[2])
+    }
+
+    google_auth = params
+  }
+}
+          </code></pre>
+          <pre><code data-trim contenteditable class="javascript">
+var req = new XMLHttpRequest()
+req.open('GET', 'https://www.googleapis.com/plus/v1/people/me/people/visible', true)
+req.setRequestHeader('Authorization', 'Bearer ' + google_auth.access_token)
+req.send(null)
+          </code></pre>
+        </section>
+
+        <!-- |||| -->
+
+        <section>
+          <h1>oauth 2</h1>
+        </section>
+
+        <section>
+          <h2>explicit grant</h2>
+          <p>Flow for a website. The access token is kept private on the backend.</p>
+        </section>
+
+        <section>
+          <h2>implicit grant</h2>
+          <p>Special flow for clients that can't keep secrets.</p>
+          <aside class="notes">
+Authorisation code grant
+
+The authorisation code grant is the grant that most people think of when OAuth is described.
+
+If you’ve ever signed into a website or application with your Twitter/Facebook/Google/(insert major Internet company here) account then you’ll have experienced using this grant.
+
+Essentially a user will click on a “sign in with Facebook” (or other IdP) and then be redirected from the application/website (the “client”) to the IdP authorisation server. The user will then sign in to the IdP with their credentials, and then - if they haven’t already - authorise the client to allow it to use the user’s data (such as their name, email address, etc). If they authorise the request the user will be redirected back to the client with a token (called the authorisation code) in the query string (e.g. http://client.com/redirect?code=XYZ123) which the client will capture and exchange for an access token in the background.
+
+This grant is suitable where the resource owner is a user and they are using a client which is allows a user to interact with a website in a browser. An obvious example is the client being another website, but desktop applications such as Spotify or Reeder use embedded browsers.
+
+Some mobile applications use this flow and again use an embedded browser (or redirect the user to the native browser and then are redirected back to the app using a custom protocol).
+
+In this grant the access token is kept private from the resource owner.
+
+If you have a mobile application that is for your own service (such as the official Spotify or Facebook apps on iOS) it isn’t appropriate to use this grant as the app itself should already be trusted by your authorisation server and so the _resource owner credentials grant would be more appropriate.
+
+
+Implicit grant
+
+The implicit grant is similar to the authentication code grant described above. The user will be redirected in a browser to the IdP authorisation server, sign in, authorise the request but instead of being returned to the client with an authentication code they are redirected with an access token straight away.
+
+The purpose of the implicit grant is for use by clients which are not capable of keeping the client’s own credentials secret; for example a JavaScript only application.
+
+If you decide to implement this grant then you must be aware that the access token should be treated as “public knowledge” (like a public RSA key) and therefore it must have a very limited permissions when interacting with the API server. For example an access token that was granted using the authentication code grant could have permission to be used to delete resources owned by the user, however an access token granted through the implicit flow should only be able to “read” resources and never perform any destructive operations.
+            </aside>
+        </section>
+
+        <!-- |||| -->
+
+        <section>
+          <h1>hello.js</h1>
+        </section>
+
+        <section>
+          <h2>modular</h2>
+          <pre><code data-trim contenteditable class="html">
+&lt;script src="src/hello.js"&gt;&lt;/script&gt;
+
+&lt;script src="src/modules/google.js"&gt;&lt;/script&gt;
+          </code></pre>
+          <div>
+          <ul>
+            <li>dropbox.js</li>
+            <li>facebook.js</li>
+            <li>flickr.js</li>
+            <li>foursquare.js</li>
+            <li>github.js</li>
+            <li>google.js</li>
+          </ul>
+          <ul>
+            <li>instagram.js</li>
+            <li>linkedin.js</li>
+            <li>soundcloud.js</li>
+            <li>twitter.js</li>
+            <li>window.js</li>
+            <li>yahoo.js</li>
+          </ul>
+          </div>
+        </section>
+
+        <section>
+          <h2>init</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello.init({
+  facebook : FACEBOOK_CLIENT_ID,
+  google   : GOOGLE_CLIENT_ID
+},{
+  redirect_uri : '/redirect'
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>login</h2>
+          <pre><code data-trim contenteditable class="javascript">
+buttonEl.addEventListener('click', function(e) {
+  hello('facebook').login()
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>login options</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello('facebook').login({
+  // default is 'popup'
+  display: 'page',
+
+  // default is null
+  scope: 'email,publish,photos',
+
+  // default is init value or window.location.href
+  redirect_uri: '/redirect-facebook',
+
+  // for explicit grant, default is 'token' for implicit grant 
+  response_type: 'code',
+  
+  // default is true for initiate auth flow, despite current valid token
+  force: false
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>on auth.login</h2>
+          <pre><code data-trim contenteditable class="javascript">
+hello.on('auth.login', function(auth){
+
+  // call user information, for the given network
+  hello( auth.network ).api( '/me' ).then( function(r){
+
+    labelEl.innerHTML = '&lt;img src="'+ r.thumbnail +'" /&gt; Hey ' + r.name
+
+  })
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>getAuthResponse</h2>
+          <p>Get the current status of the session.</p>
+          <p><small>This is a synchronous request and does not validate any session cookies which may have expired.</small></p>
+          <pre><code data-trim contenteditable class="javascript">
+var fbSession = hello('facebook').getAuthResponse()
+
+var fbAccessToken = fbSession.access_token
+
+var fbExpires = fbSession.expires
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>api</h2>
+          <p>Make calls to the API for getting and posting data.</p>
+          <pre><code data-trim contenteditable class="javascript">
+hello('facebook').api('me').then(function(json){
+
+  alert('Your name is '+ json.name)
+
+}, function(e){
+
+  alert('Whoops! ' + e.error.message )
+
+})
+          </code></pre>
+        </section>
+
+        <section>
+          <h2>oauth proxy</h2>
+          <img src="img/oauth-proxy.png" alt="OAuth Proxy">
+        </section>
+
+        <section>
+          <h3><a href="http://adodson.com/hello.js/" target="_blank">adodson.com/hello.js</a></h3>
+        </section>
+
+
+      </div>
+
+    </div>
+
+    <script src="lib/js/head.min.js"></script>
+    <script src="js/reveal.min.js"></script>
+
+    <script>
+
+      // Full list of configuration options available here:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+
+        theme: 'solarized', // available themes are in /css/theme
+        transition: 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+        // Parallax scrolling
+        // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+        // parallaxBackgroundSize: '2100px 900px',
+
+        // Optional libraries used to extend on reveal.js
+        dependencies: [
+          { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+          { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+          { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+          { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+        ]
+      });
+
+    </script>
+
+  </body>
+</html>
